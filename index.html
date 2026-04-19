@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;1,6..12,300;1,6..12,400;1,6..12,700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>emailjs.init('f1zvreRQAivW_LqWi');</script>
   <style>
     /* ════════════════════════════════════════════════════
        GLOBAL RESET & VARIABLES
@@ -186,9 +188,9 @@
       font-family: var(--font); font-size: 0.74rem; font-weight: 700;
       letter-spacing: 0.08em; text-transform: uppercase;
       padding: 7px 15px; border: 1.5px solid #ccc; border-radius: 100px;
-      color: var(--black); transition: background 0.2s, color 0.2s, border-color 0.2s; cursor: default;
+      color: var(--black); cursor: default;
     }
-    .tag:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+    .tag:hover { background: transparent; color: var(--black); border-color: #ccc; }
 
     /* ════════════════════════════════════════════════════
        PAGE 2: EXPERIENCE
@@ -1184,13 +1186,6 @@
             <img src="images/C1.jpg" alt="Meet Patel" />
           </div>
         </div>
-        <div class="deal-banner">
-          <div class="deal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg></div>
-          <div class="deal-text">
-            <h3>📡 Looking for better Home Internet or Mobility deals?</h3>
-            <p>I can help you save on your monthly bills with the best Rogers & Bell plans. Reach out at <strong>meetpatel4402@gmail.com</strong> and I'll find the right deal for you.</p>
-          </div>
-        </div>
       </div>
     </div>
     <footer style="margin-top:0;"><p>© 2026 Meet Patel</p></footer>
@@ -1332,11 +1327,23 @@
       const fmessage = document.getElementById('fmessage').value.trim();
       if (!fname || !femail || !fmessage) { alert('Please fill in your name, email, and message.'); return; }
       const lname = document.getElementById('lname').value.trim();
-      const subject = encodeURIComponent('Portfolio Contact from ' + fname + ' ' + lname);
-      const body = encodeURIComponent('Hi Meet,\n\nNew message from your portfolio.\n\nName: ' + fname + ' ' + lname + '\nEmail: ' + femail + '\n\nMessage:\n' + fmessage);
-      window.location.href = 'mailto:meetpatel@example.com?subject=' + subject + '&body=' + body;
-      document.getElementById('formContent').style.display = 'none';
-      document.getElementById('modalSuccess').style.display = 'flex';
+
+      const sendBtn = document.querySelector('.send-btn');
+      sendBtn.textContent = 'Sending…';
+      sendBtn.disabled = true;
+
+      emailjs.send('service_portfolio', 'template_u368er6', {
+        from_name: fname + ' ' + lname,
+        from_email: femail,
+        message: fmessage
+      }).then(function() {
+        document.getElementById('formContent').style.display = 'none';
+        document.getElementById('modalSuccess').style.display = 'flex';
+      }, function(error) {
+        sendBtn.textContent = 'Send Message';
+        sendBtn.disabled = false;
+        alert('Oops! Something went wrong. Please try again.\n' + JSON.stringify(error));
+      });
     }
 
     // ══ Blog Lightbox ══
